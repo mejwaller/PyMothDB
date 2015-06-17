@@ -130,3 +130,18 @@ class ConnectDlg(MyDialog):
         self.psswdInp.grid(row=3,column=1,sticky=N+S+E+W) 
         
         return self.psswdInp#initial focus
+    
+class adHocQueryDlg(MyDialog):
+        
+    def body(self,master):
+            self.queryLbl = Label(master,text="Query:")
+            self.queryLbl.grid(row=0,column=0, sticky=N+S+E+W)
+            self.queryInp = Entry(master)
+            self.queryInp.grid(row=0,column=1,sticky=N+S+E+W)
+            
+    def apply(self):            
+            self.result = self.queryInp.get()
+            
+           
+
+            
