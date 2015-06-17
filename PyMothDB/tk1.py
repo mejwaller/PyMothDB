@@ -1,7 +1,7 @@
 #!/usr/bin/env python      
 import Tkinter as tk   
 import dialogs as d 
-import mysql.connector  
+import dbcontroller as db
 from mysql.connector import Error
 import tkMessageBox
 
@@ -9,10 +9,7 @@ class Application(tk.Frame):
     def __init__(self, master):
         tk.Frame.__init__(self, master)
         self.parent = master
-        self.connected = False
-        
-        
-        
+                
         self.constructUI()
         
     def constructUI(self):
@@ -30,7 +27,7 @@ class Application(tk.Frame):
         self.addRecMenu.add_command(label = "Add taxon data...")
         
         self.queryMenu = tk.Menu(self.menuBar)
-        self.queryMenu.add_command(label="Run a query...")
+        self.queryMenu.add_command(label="Run a query...",command=self.onAdHocQuery)
                 
         self.menuBar.add_cascade(label="File", menu=self.fileMenu)                
         self.menuBar.add_cascade(label="Add records", menu=self.addRecMenu, state=tk.DISABLED)
@@ -44,33 +41,33 @@ class Application(tk.Frame):
         
         #see e.g. http://www.mysqltutorial.org/python-mysql/
         try:
-            self.cnx = mysql.connector.connect(user=params[2],password=params[3],
-                              host=params[0],
-                              database=params[1])
-            self.connected = True
-            #activate add and query records - indexing start at 1 not 0!
-            self.menuBar.entryconfig(2, state=tk.NORMAL)
-            self.menuBar.entryconfig(3, state=tk.NORMAL)
+            #db.dbController.connect(params[2],params[3],params[0],params[1])
+            self.dbase = db.dbController()
+            self.dbase.connect(params)
             
-            #curA = self.cnx.cursor()
-
-            #showtables = ("SHOW TABLES")
-
-            #curA.execute(showtables)
-
-            #print curA.fetchall()
-
-            #curA.close()
+            if self.dbase.connected():  
+                
+                #activate add and query records - indexing start at 1 not 0!
+                self.menuBar.entryconfig(2, state=tk.NORMAL)
+                self.menuBar.entryconfig(3, state=tk.NORMAL)
             
-            #self.cnx.close
-        
         except Error as e: 
                 tkMessageBox.showerror(
                 "Database connect",
                 "Cannot connect to database %s - error: %s" % (params[1], e))
+                
+    def onAdHocQuery(self):
+        dlg = d.adHocQueryDlg(self)
+        
+        try:
+            self.dbase.runQuery(dlg.result)
+        except Error as e:
+            tkMessageBox.showerror("Query error","Got error: %s" % e)
                              
            
     def onExit(self):
+        if self.dbase.connected():
+            self.dbase.close()
         self.quit()                
 
 
