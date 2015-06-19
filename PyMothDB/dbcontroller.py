@@ -15,9 +15,12 @@ class dbController:
         curA = self.cnx.cursor()       
         curA.execute(self.lastQuery)        
         self.lastResult = curA.fetchall()
-        print self.lastResult
+        print str(self.lastResult)
         curA.close()
-
+        
+    def runAddRecEvent(self,stmt):
+        print "adding recevent..."
+        print stmt
     
     def close(self):
         self.cnx.close

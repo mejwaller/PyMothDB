@@ -9,6 +9,7 @@ class Application(tk.Frame):
     def __init__(self, master):
         tk.Frame.__init__(self, master)
         self.parent = master
+        self.dbase = False
                 
         self.constructUI()
         
@@ -22,7 +23,7 @@ class Application(tk.Frame):
         self.fileMenu.add_command(label="Quit", command=self.onExit)
         
         self.addRecMenu = tk.Menu(self.menuBar)
-        self.addRecMenu.add_command(label = "Add record event...")
+        self.addRecMenu.add_command(label = "Add record event...", command=self.onAddRecEvent)
         self.addRecMenu.add_command(label = "Add record data...")
         self.addRecMenu.add_command(label = "Add taxon data...")
         
@@ -36,38 +37,48 @@ class Application(tk.Frame):
         
     def onConnectCmd(self):
         dlg = d.ConnectDlg(self)
-        params = dlg.result
-        #print params
-        
-        #see e.g. http://www.mysqltutorial.org/python-mysql/
-        try:
-            #db.dbController.connect(params[2],params[3],params[0],params[1])
-            self.dbase = db.dbController()
-            self.dbase.connect(params)
+               
+        if not dlg.cancelled:
+            #see e.g. http://www.mysqltutorial.org/python-mysql/
+            try:
+                #db.dbController.connect(params[2],params[3],params[0],params[1])
+                self.dbase = db.dbController()
+                self.dbase.connect(dlg.result)
             
-            if self.dbase.connected():  
+                if self.dbase.connected():  
                 
-                #activate add and query records - indexing start at 1 not 0!
-                self.menuBar.entryconfig(2, state=tk.NORMAL)
-                self.menuBar.entryconfig(3, state=tk.NORMAL)
+                    #activate add and query records - indexing start at 1 not 0!
+                    self.menuBar.entryconfig(2, state=tk.NORMAL)
+                    self.menuBar.entryconfig(3, state=tk.NORMAL)
             
-        except Error as e: 
+            except Error as e: 
                 tkMessageBox.showerror(
-                "Database connect",
-                "Cannot connect to database %s - error: %s" % (params[1], e))
+                    "Database connect",
+                    "Cannot connect to database %s - error: %s" % (dlg .result[1], e))
                 
     def onAdHocQuery(self):
         dlg = d.adHocQueryDlg(self)
+            
+        if not dlg.cancelled:
+            try:
+                self.dbase.runQuery(dlg.result)
+            except Error as e:
+                tkMessageBox.showerror("Query error","Got error: %s" % e)
+            
+    def onAddRecEvent(self):
+        dlg = d.addRecEventDlg(self)
         
-        try:
-            self.dbase.runQuery(dlg.result)
-        except Error as e:
-            tkMessageBox.showerror("Query error","Got error: %s" % e)
-                             
+        if not dlg.cancelled:
+            try:
+                self.dbase.runAddRecEvent(dlg.result)
+            except Error as e:
+                tkMessageBox.showerror("Problem adding record event","Got error: %s" % e)       
+                                    
            
     def onExit(self):
-        if self.dbase.connected():
-            self.dbase.close()
+        if not self.dbase == False:
+            if self.dbase.connected():
+                self.dbase.close()
         self.quit()                
 
 
