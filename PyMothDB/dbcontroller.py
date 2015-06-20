@@ -29,13 +29,16 @@ class dbController:
       
     #note record_event is enforced unique on date,type and gridref (together)
     #so inserting a dupe should fail  
-    def runAddRecEvent(self,stmt):
+    def runAddRecEvent(self,data):
         #print stmt
         self.lastCmd = "INSERT INTO record_event(record_date,record_type,grid_ref,notes) \
-VALUES('" + stmt[0] + "','" + stmt[1] + "','" + stmt[2] + "','" + stmt[3] + "');"
+VALUES('" + data[0] + "','" + data[1] + "','" + data[2] + "','" + data[3] + "');"
         #print self.lastInsert
         self.runInsert()
    
     def close(self):
         self.cnx.close
+        
+    def runAddRecData(self,data):
+        print "Adding record data..."
     
