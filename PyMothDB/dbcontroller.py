@@ -41,4 +41,8 @@ VALUES('" + data[0] + "','" + data[1] + "','" + data[2] + "','" + data[3] + "');
         
     def runAddRecData(self,data):
         print "Adding record data..."
+        self.lastCmd = "INSERT INTO record_data(recevent_id,taxon_id,count,notes) \
+VALUES('" + data[0] + "','" + data[1] + "','" + data[2] + "','" + data[3] + "');"
+        self.runInsert()
+        
     

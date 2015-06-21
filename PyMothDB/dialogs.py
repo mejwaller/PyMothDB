@@ -283,6 +283,17 @@ aberration_name,form_name,id FROM taxon_data"
         self.taxaLBox = Listbox(master,height=4,width=50,exportselection=0)
         self.taxaLBox.grid(row=1,column=2,sticky=N+S+E+W)   
         
+        self.countLbl = Label(master,text="Count:")
+        self.countLbl.grid(row=3,column=0,sticky=N+S+W+E)
+        self.countInp = Entry(master)
+        self.countInp.grid(row=3,column=1,sticky=N+S+E+W)
+        
+        self.notesLbl = Label(master,text="Notes:")
+        self.notesLbl.grid(row=4,column=0,sticky=N+S+E+W)
+        self.notesInp = Text(master)
+        self.notesInp.grid(row=4,column=1,sticky=N+S+E+W)
+        
+        
         # Function for updating the list/doing the search.
         # It needs to be called here to populate the listbox.
         self.update_recev_list()
@@ -311,25 +322,40 @@ aberration_name,form_name,id FROM taxon_data"
     def apply(self):
         recIndex=self.recEvLBox.curselection()
         if recIndex:           
-            #BROWSE selection mode so only 1 can be selected ata time
+            #BROWSE selection mode so only 1 can be selected at a time
             #so chosen if not empty will have [0] entry
             self.recev_chosen=self.recEvLBox.get(recIndex[0])
-            print "selected event_id " + self.recev_chosen.split(" ")[0]
+            recEvId = self.recev_chosen.split()[0]
+            #print "selected event_id " + recEvId
         
         taxaIndex = self.taxaLBox.curselection()
         if taxaIndex:
             self.taxa_chosen=self.taxaLBox.get(taxaIndex[0])
-            print "selected taxa id " + self.taxa_chosen.split()[-1]
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-                   
-
+            #primary key id is at end of data - split() uses generic whitespace as default!
+            taxaId = self.taxa_chosen.split()[-1]
+            #print "selected taxa id " + taxaId
             
+        count=self.countInp.get()
+        #if count:
+        #    print "Count was " + count
+            
+        recNotes = self.notesInp.get(1.0,END)[:-1]
+        #if recNotes:
+        #    print "Notes were " + recNotes
+        
+        self.result = recEvId,taxaId,count,recNotes
+        
+    def validate(self):
+        recIndex=self.recEvLBox.curselection()
+        taxaIndex = self.taxaLBox.curselection()
+        rawCount=self.countInp.get()
+        
+        if recIndex and taxaIndex and rawCount:
+            self.isValid=True 
+            return True
+        else:
+            tkMessageBox.showerror("Record event validation failed","record event index: " + str(recIndex) + "\n" 
+                    + "taxIndex: " + str(taxaIndex) + "\n"
+                    + "count: " + rawCount + "\n"
+                    + "notes: " + self.notesInp.get(1.0,END)[:-1])
+        return False
