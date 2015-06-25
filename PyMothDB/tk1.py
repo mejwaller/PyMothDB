@@ -25,7 +25,7 @@ class Application(tk.Frame):
         self.addRecMenu = tk.Menu(self.menuBar)
         self.addRecMenu.add_command(label = "Add record event...", command=self.onAddRecEvent)
         self.addRecMenu.add_command(label = "Add record data...", command=self.onAddRecData)
-        self.addRecMenu.add_command(label = "Add taxon data...")
+        self.addRecMenu.add_command(label = "Add taxon data...", command = self.onAddTaxonData)
         
         self.queryMenu = tk.Menu(self.menuBar)
         self.queryMenu.add_command(label="Run a query...",command=self.onAdHocQuery)
@@ -81,9 +81,17 @@ class Application(tk.Frame):
             try:
                 self.dbase.runAddRecData(dlg.result) 
             except Error as e:
-                tkMessageBox.showerror("Problem adding record event","Got error: %s" % e)   
-                                    
-           
+                tkMessageBox.showerror("Problem adding record event","Got error: %s" % e)
+                
+    def onAddTaxonData(self):
+        dlg = d.addTaxonDlg(self)
+        
+        if not dlg.cancelled:
+            try:
+                self.dbase.runAddTaxon(dlg.result)
+            except Error as e:
+                tkMessageBox.showerror("Problem adding taxon","Got error: %s" % e)
+                
     def onExit(self):
         if not self.dbase == False:
             if self.dbase.connected():
