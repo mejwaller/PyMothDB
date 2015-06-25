@@ -45,4 +45,11 @@ VALUES('" + data[0] + "','" + data[1] + "','" + data[2] + "','" + data[3] + "');
 VALUES('" + data[0] + "','" + data[1] + "','" + data[2] + "','" + data[3] + "');"
         self.runInsert()
         
+    def runAddTaxon(self,data):
+        print "Adding taxon.."
+        self.lastCmd = "INSERT INTO taxon_data(order_name,family_name,subfamily_name,genus_name,\
+species_name,subspecies_name,aberration_name,form_name,vernacular_name,taxon_key) \
+VALUES('" + data[0] + "','" + data[1] + "','" + data[2] + "','" + data[3] + "','" + data[4]\
+ + "','" + data[5] + "','" + data[6] + "','" + data[7] + "','" + data[8] + "','" + data[9] + "');" 
+        self.runInsert()
     
