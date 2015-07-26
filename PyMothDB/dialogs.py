@@ -228,12 +228,12 @@ class addRecDataDlg(MyDialog):
         self.isValid=False  
         
         #1st, need to select a record event             
-        getRecEvents="SELECT event_id,record_date,record_type,grid_ref FROM record_event"
-        self.master.dbase.runQuery(getRecEvents)
-        self.recEventsRaw = self.master.dbase.lastResult
+        #getRecEvents="SELECT event_id,record_date,record_type,grid_ref FROM record_event"
+        #self.master.dbase.runQuery(getRecEvents)
+        #self.recEventsRaw = self.master.dbase.lastResult
         self.strrep=""
         self.recEvents = {}
-        for items in self.recEventsRaw:
+        for items in self.master.recEventsRaw:
             self.strrep=""
             for parts in items:
                 self.strrep += str(parts)
@@ -256,13 +256,13 @@ class addRecDataDlg(MyDialog):
         
         
         #2nd. need to chose taxon..
-        getTaxa = "SELECT genus_name,species_name,vernacular_name,subspecies_name,\
-aberration_name,form_name,id FROM taxon_data"
-        self.master.dbase.runQuery(getTaxa)
-        self.taxaRaw = self.master.dbase.lastResult
+        #getTaxa = "SELECT genus_name,species_name,vernacular_name,subspecies_name,\
+#aberration_name,form_name,id FROM taxon_data"
+        #self.master.dbase.runQuery(getTaxa)
+        #self.taxaRaw = self.master.dbase.lastResult
         self.strrep=""
         self.taxa = {}
-        for items in self.taxaRaw:
+        for items in self.master.taxaRaw:
             self.strrep=""
             for parts in items:
                 self.strrep += str(parts)
