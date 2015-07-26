@@ -50,6 +50,16 @@ class Application(tk.Frame):
                     #activate add and query records - indexing start at 1 not 0!
                     self.menuBar.entryconfig(2, state=tk.NORMAL)
                     self.menuBar.entryconfig(3, state=tk.NORMAL)
+                    
+                    #pre-populate taxondata and recevent data
+                    getTaxa = "SELECT genus_name,species_name,vernacular_name,subspecies_name,\
+aberration_name,form_name,id FROM taxon_data"
+                    self.dbase.runQuery(getTaxa)
+                    self.taxaRaw = self.dbase.lastResult
+                    
+                    getRecEvents="SELECT event_id,record_date,record_type,grid_ref FROM record_event"
+                    self.dbase.runQuery(getRecEvents)
+                    self.recEventsRaw = self.dbase.lastResult
             
             except Error as e: 
                 tkMessageBox.showerror(
@@ -71,6 +81,10 @@ class Application(tk.Frame):
         if not dlg.cancelled:
             try:
                 self.dbase.runAddRecEvent(dlg.result)
+                #repopulate recevent cache
+                getRecEvents="SELECT event_id,record_date,record_type,grid_ref FROM record_event"
+                self.dbase.runQuery(getRecEvents)
+                self.recEventsRaw = self.dbase.lastResult
             except Error as e:
                 tkMessageBox.showerror("Problem adding record event","Got error: %s" % e)  
                 
@@ -89,6 +103,12 @@ class Application(tk.Frame):
         if not dlg.cancelled:
             try:
                 self.dbase.runAddTaxon(dlg.result)
+                
+                #repopulate taxon data cacahe
+                getTaxa = "SELECT genus_name,species_name,vernacular_name,subspecies_name,\
+aberration_name,form_name,id FROM taxon_data"
+                self.dbase.runQuery(getTaxa)
+                self.taxaRaw = self.dbase.lastResult
             except Error as e:
                 tkMessageBox.showerror("Problem adding taxon","Got error: %s" % e)
                 
