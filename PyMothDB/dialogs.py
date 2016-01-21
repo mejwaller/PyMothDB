@@ -3,7 +3,7 @@
 from Tkinter import *
 from datetime import datetime, timedelta
 import tkMessageBox
-import dbcontroller as db
+#import dbcontroller as db
 
 class MyDialog(Toplevel):
 
@@ -441,7 +441,7 @@ class addTaxonDlg(MyDialog):
                     + "sub-species: " + subSpecies + "\n"
                     + "ab.: " + ab + "\n"
                     + "f.: " + f + "\n"
-                    + "common name: " + "\n"
+                    + "common name: " + commonName + "\n"
                     + "taxon key: " + key)
         return False
     
@@ -459,6 +459,63 @@ class addTaxonDlg(MyDialog):
         
         self.result = order,family,subFamily,genus,species,subSpecies,ab,f,commonName,key
         
+class updateRecEventDlg(MyDialog):
+    
+    def body(self,master):
+        self.isValid=False  
+        
+        #1st, need to select a record event             
+        #getRecEvents="SELECT event_id,record_date,record_type,grid_ref FROM record_event"
+        #self.master.dbase.runQuery(getRecEvents)
+        #self.recEventsRaw = self.master.dbase.lastResult
+        self.strrep=""
+        self.recEvents = {}
+        for items in self.master.recEventsRaw:
+            self.strrep=""
+            for parts in items:
+                self.strrep += str(parts)
+                self.strrep += " "
+            self.recEvents[items[0]] = self.strrep                 
+        #print self.recEvents               
+        self.recEvLbl = Label(master,text="Record event:")
+        self.recEvLbl.grid(row=0,column=0,sticky=N+S+E+W)
+        
+        #from http://code.activestate.com/recipes/578860-setting-up-a-listbox-filter-in-tkinterpython-27/
+        self.recev_search = StringVar()
+        self.recev_search.trace("w", lambda name, index, mode: self.update_recev_list())
+        self.recev_searchEntry = Entry(master, textvariable=self.recev_search, width=13)
+        self.recev_searchEntry.grid(row=0,column=1,sticky=N+S+E+W)
+        
+        #see http://stackoverflow.com/questions/756662/using-multiple-listboxes-in-python-tkinter
+        #else can't use multiple Listboxes per window (listbox selection loses focus...use exportseection=0
+        self.recEvLBox = Listbox(master,height=4,width=30,exportselection=0)
+        self.recEvLBox.grid(row=0,column=2,sticky=N+S+E+W)
+        
+        # Function for updating the list/doing the search.
+        # It needs to be called here to populate the listbox.
+        self.update_recev_list()
+        
+    def update_recev_list(self):
+        search_term = self.recev_search.get()
+        
+        self.recEvLBox.delete(0,END)
+        
+        for item in self.recEvents.values():
+            if search_term.lower() in item.lower():
+                self.recEvLBox.insert(0,item)
+
+     
+    def validate(self):
+        recIndex=self.recEvLBox.curselection()
+                
+        if recIndex:
+            self.isValid=True 
+            return True
+        else:
+            tkMessageBox.showerror("Record event validation failed","record event index: " + str(recIndex) + "\n")                   
+        return False
+        
+           
         
         
         

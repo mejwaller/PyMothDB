@@ -121,7 +121,17 @@ aberration_name,form_name,id FROM taxon_data"
                 tkMessageBox.showerror("Problem adding taxon","Got error: %s" % e)
                 
     def onUpdateRecEvent(self):
-        pass
+        dlg = d.updateRecEventDlg(self,self.dbase)
+        
+        if not dlg.cancelled:
+            try:
+                self.dbase.runUpdateRecEvent(dlg.result)
+                #repopulate recevent cache
+                getRecEvents="SELECT event_id,record_date,record_type,grid_ref FROM record_event"
+                self.dbase.runQuery(getRecEvents)
+                self.recEventsRaw = self.dbase.lastResult
+            except Error as e:
+                tkMessageBox.showerror("Problem updating record event","Got error: %s" % e)
     
     def onUpdateRecData(self):
         pass
