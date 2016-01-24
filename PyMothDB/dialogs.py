@@ -491,6 +491,23 @@ class updateRecEventDlg(MyDialog):
         self.recEvLBox = Listbox(master,height=4,width=30,exportselection=0)
         self.recEvLBox.grid(row=0,column=2,sticky=N+S+E+W)
         
+        self.typeLbl = Label(master, text="Record type:")
+        self.typeLbl.grid(row=1,column=0,sticky=N+S+E+W)
+        self.typeInp = Entry(master)
+        #self.typeInp.insert(0,"MV Light Trap")
+        self.typeInp.grid(row=1,column=1,sticky=N+S+E+W)
+        
+        self.gridLbl = Label(master,text="Grd ref:")
+        self.gridLbl.grid(row=2,column=0,sticky=N+S+E+W)
+        self.gridInp = Entry(master)
+        #self.gridInp.insert(0,"SU993553")
+        self.gridInp.grid(row=2,column=1,sticky=N+S+E+W)
+        
+        self.notesLbl = Label(master,text="Notes:")
+        self.notesLbl.grid(row=3,column=0,sticky=N+S+E+W)
+        self.notesInp = Text(master)
+        self.notesInp.grid(row=3,column=1,sticky=N+S+E+W)
+        
         # Function for updating the list/doing the search.
         # It needs to be called here to populate the listbox.
         self.update_recev_list()
