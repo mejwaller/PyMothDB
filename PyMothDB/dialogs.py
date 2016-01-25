@@ -490,6 +490,7 @@ class updateRecEventDlg(MyDialog):
         #else can't use multiple Listboxes per window (listbox selection loses focus...use exportseection=0
         self.recEvLBox = Listbox(master,height=4,width=30,exportselection=0)
         self.recEvLBox.grid(row=0,column=2,sticky=N+S+E+W)
+        self.recEvLBox.bind('<<ListboxSelect>>', self.onselect)
         
         self.typeLbl = Label(master, text="Record type:")
         self.typeLbl.grid(row=1,column=0,sticky=N+S+E+W)
@@ -497,7 +498,7 @@ class updateRecEventDlg(MyDialog):
         #self.typeInp.insert(0,"MV Light Trap")
         self.typeInp.grid(row=1,column=1,sticky=N+S+E+W)
         
-        self.gridLbl = Label(master,text="Grd ref:")
+        self.gridLbl = Label(master,text="Grid ref:")
         self.gridLbl.grid(row=2,column=0,sticky=N+S+E+W)
         self.gridInp = Entry(master)
         #self.gridInp.insert(0,"SU993553")
@@ -531,7 +532,33 @@ class updateRecEventDlg(MyDialog):
         else:
             tkMessageBox.showerror("Record event validation failed","record event index: " + str(recIndex) + "\n")                   
         return False
+    
+    #from http://stackoverflow.com/questions/6554805/getting-a-callback-when-a-tkinter-listbox-selection-is-changed
+    def onselect(self,evt):
+        # Note here that Tkinter passes an event object to onselect()
+        w = evt.widget
+        index = int(w.curselection()[0])
+        value = w.get(index)
+        evid = value.split()[0]  
+             
+        self.master.dbase.runQuery("SELECT * from record_event where event_id=%s" % evid); 
+        queryres=self.master.dbase.lastResult 
+        #an array of tuples - in this case an array conatining one tuple i.e. at queryres[0]   
+        data = queryres[0];
+        #print data;
+                
+        #see http://effbot.org/tkinterbook/text.htm#Tkinter.Text.insert-method
+        #first delete everything (start is 1.0 for Text, 0 for Entry, end is END) then insert at END
+        #self.recev_searchEntry.delete(0,END)
+        self.typeInp.delete(0,END)
+        self.gridInp.delete(0,END)
+        self.notesInp.delete(1.0,END)
         
+        #populate dialog fields with result
+        #self.recev_searchEntry.insert(INSERT,str(data[1]))
+        self.typeInp.insert(INSERT,str(data[2]))
+        self.gridInp.insert(INSERT,str(data[3]))
+        self.notesInp.insert(END,str(data[4]))
            
         
         
