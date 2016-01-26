@@ -524,14 +524,30 @@ class updateRecEventDlg(MyDialog):
 
      
     def validate(self):
-        recIndex=self.recEvLBox.curselection()
-                
-        if recIndex:
+   
+        retval1 = self.typeInp.get() 
+        retval2 = self.gridInp.get()
+        retval3 = self.notesInp.get(1.0,END)[:-1]
+            
+        #notes (retval3) maybe empty
+        if retval1 and retval2:
             self.isValid=True 
             return True
         else:
-            tkMessageBox.showerror("Record event validation failed","record event index: " + str(recIndex) + "\n")                   
-        return False
+            tkMessageBox.showerror("Record event validation failed","type:" + retval1 + "\n"
+                + "gridref:" + retval2 + "\n"
+                + "notes:" + retval3)                   
+            return False
+        
+    def apply(self):
+        print "updatereceventdlg apply..."        
+        recType = self.typeInp.get()
+        gridRef = self.gridInp.get()
+        #see http://stackoverflow.com/questions/14824163/how-to-get-the-input-from-the-tkinter-text-box-widget
+        #http://stackoverflow.com/questions/15565384/python-text-widget-get-method
+        recNotes = self.notesInp.get(1.0,END)[:-1]
+        
+        self.result = self.recevid,recType,gridRef,recNotes
     
     #from http://stackoverflow.com/questions/6554805/getting-a-callback-when-a-tkinter-listbox-selection-is-changed
     def onselect(self,evt):
@@ -559,6 +575,9 @@ class updateRecEventDlg(MyDialog):
         self.typeInp.insert(INSERT,str(data[2]))
         self.gridInp.insert(INSERT,str(data[3]))
         self.notesInp.insert(END,str(data[4]))
+        
+        #store id
+        self.recevid = str(data[0])
            
         
         
