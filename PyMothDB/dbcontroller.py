@@ -55,11 +55,11 @@ VALUES('" + data[0] + "','" + data[1] + "','" + data[2] + "','" + data[3] + "','
         
     def runUpdateRecEvent(self,data):
         print "Updating record event..."
-        #self.lastCmd = "UPDATE record_event set record_type = '" + data[1] + "', grid_ref = '" \
-        #+ data[2] + "', notes = '" + data[3] + "' where event_id = " + data[0] + ";"
-        
-        print "UPDATE record_event set record_type = '" + data[1] + "', grid_ref = '" \
+        self.lastCmd = "UPDATE record_event set record_type = '" + data[1] + "', grid_ref = '" \
         + data[2] + "', notes = '" + data[3] + "' where event_id = " + data[0] + ";"
         
-        #self.runInsert()
+        #print "UPDATE record_event set record_type = '" + data[1] + "', grid_ref = '" \
+        #+ data[2] + "', notes = '" + data[3] + "' where event_id = " + data[0] + ";"
+        
+        self.runInsert()
     
