@@ -27,11 +27,17 @@ class Application(tk.Frame):
         self.addRecMenu.add_command(label = "Add record data...", command=self.onAddRecData)
         self.addRecMenu.add_command(label = "Add taxon data...", command = self.onAddTaxonData)
         
+        self.updateRecMenu = tk.Menu(self.menuBar);
+        self.updateRecMenu.add_command(label = "Update record event...", command=self.onUpdateRecEvent)
+        self.updateRecMenu.add_command(label = "Update record data...", command=self.onUpdateRecData)
+        self.updateRecMenu.add_command(label = "Update taxon data...", command=self.onUpdateTaxonData)
+        
         self.queryMenu = tk.Menu(self.menuBar)
         self.queryMenu.add_command(label="Run a query...",command=self.onAdHocQuery)
                 
         self.menuBar.add_cascade(label="File", menu=self.fileMenu)                
         self.menuBar.add_cascade(label="Add records", menu=self.addRecMenu, state=tk.DISABLED)
+        self.menuBar.add_cascade(label="Update Records", menu=self.updateRecMenu, state=tk.DISABLED)
         self.menuBar.add_cascade(label="Query", menu=self.queryMenu, state=tk.DISABLED)
                 
         
@@ -47,9 +53,11 @@ class Application(tk.Frame):
             
                 if self.dbase.connected():  
                 
-                    #activate add and query records - indexing start at 1 not 0!
-                    self.menuBar.entryconfig(2, state=tk.NORMAL)
-                    self.menuBar.entryconfig(3, state=tk.NORMAL)
+                    #activate add, update and query records - indexing start at 1 not 0!
+                    self.menuBar.entryconfig(2, state=tk.NORMAL) #add record
+                    self.menuBar.entryconfig(3, state=tk.NORMAL) #update record
+                    self.menuBar.entryconfig(4, state=tk.NORMAL) #query
+                    
                     
                     #pre-populate taxondata and recevent data
                     getTaxa = "SELECT genus_name,species_name,vernacular_name,subspecies_name,\
@@ -111,6 +119,25 @@ aberration_name,form_name,id FROM taxon_data"
                 self.taxaRaw = self.dbase.lastResult
             except Error as e:
                 tkMessageBox.showerror("Problem adding taxon","Got error: %s" % e)
+                
+    def onUpdateRecEvent(self):
+        dlg = d.updateRecEventDlg(self,self.dbase)
+        
+        if not dlg.cancelled:
+            try:
+                self.dbase.runUpdateRecEvent(dlg.result)
+                #repopulate recevent cache
+                getRecEvents="SELECT event_id,record_date,record_type,grid_ref FROM record_event"
+                self.dbase.runQuery(getRecEvents)
+                self.recEventsRaw = self.dbase.lastResult
+            except Error as e:
+                tkMessageBox.showerror("Problem updating record event","Got error: %s" % e)
+    
+    def onUpdateRecData(self):
+        pass
+    
+    def onUpdateTaxonData(self):
+        pass
                 
     def onExit(self):
         if not self.dbase == False:

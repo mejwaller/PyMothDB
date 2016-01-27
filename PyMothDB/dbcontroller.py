@@ -1,5 +1,5 @@
 import mysql.connector  
-from mysql.connector import Error
+#from mysql.connector import Error
 
 class dbController:
             
@@ -46,10 +46,20 @@ VALUES('" + data[0] + "','" + data[1] + "','" + data[2] + "','" + data[3] + "');
         self.runInsert()
         
     def runAddTaxon(self,data):
-        print "Adding taxon.."
+        print "Adding taxon..."
         self.lastCmd = "INSERT INTO taxon_data(order_name,family_name,subfamily_name,genus_name,\
 species_name,subspecies_name,aberration_name,form_name,vernacular_name,taxon_key) \
 VALUES('" + data[0] + "','" + data[1] + "','" + data[2] + "','" + data[3] + "','" + data[4]\
  + "','" + data[5] + "','" + data[6] + "','" + data[7] + "','" + data[8] + "','" + data[9] + "');" 
+        self.runInsert()
+        
+    def runUpdateRecEvent(self,data):
+        print "Updating record event..."
+        self.lastCmd = "UPDATE record_event set record_type = '" + data[1] + "', grid_ref = '" \
+        + data[2] + "', notes = '" + data[3] + "' where event_id = " + data[0] + ";"
+        
+        #print "UPDATE record_event set record_type = '" + data[1] + "', grid_ref = '" \
+        #+ data[2] + "', notes = '" + data[3] + "' where event_id = " + data[0] + ";"
+        
         self.runInsert()
     
