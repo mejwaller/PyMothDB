@@ -1,6 +1,12 @@
 #!/usr/bin/env python      
 import Tkinter as tk   
-import dialogs as d 
+import dialogs.dialogs as d 
+import dialogs.ConnectDlg as Connect
+import dialogs.adHocQueryDlg as adHoc 
+import dialogs.addReceventDlg as addRecEv
+import dialogs.addRecDataDlg as addRecData
+import dialogs.addTaxonDlg as addTax
+import dialogs.updateRecEventDlg as updateRecEv
 import dbcontroller as db
 from mysql.connector import Error
 import tkMessageBox
@@ -42,7 +48,7 @@ class Application(tk.Frame):
                 
         
     def onConnectCmd(self):
-        dlg = d.ConnectDlg(self)
+        dlg = Connect.ConnectDlg(self)
                
         if not dlg.cancelled:
             #see e.g. http://www.mysqltutorial.org/python-mysql/
@@ -75,7 +81,7 @@ aberration_name,form_name,id FROM taxon_data"
                     "Cannot connect to database %s - error: %s" % (dlg .result[1], e))
                 
     def onAdHocQuery(self):
-        dlg = d.adHocQueryDlg(self)
+        dlg = adHoc.adHocQueryDlg(self)
             
         if not dlg.cancelled:
             try:
@@ -84,7 +90,7 @@ aberration_name,form_name,id FROM taxon_data"
                 tkMessageBox.showerror("Query error","Got error: %s" % e)
             
     def onAddRecEvent(self):
-        dlg = d.addRecEventDlg(self)
+        dlg = addRecEv.addRecEventDlg(self)
         
         if not dlg.cancelled:
             try:
@@ -97,7 +103,7 @@ aberration_name,form_name,id FROM taxon_data"
                 tkMessageBox.showerror("Problem adding record event","Got error: %s" % e)  
                 
     def onAddRecData(self):
-        dlg = d.addRecDataDlg(self,self.dbase) 
+        dlg = addRecData.addRecDataDlg(self,self.dbase) 
         
         if not dlg.cancelled:
             try:
@@ -106,7 +112,7 @@ aberration_name,form_name,id FROM taxon_data"
                 tkMessageBox.showerror("Problem adding record event","Got error: %s" % e)
                 
     def onAddTaxonData(self):
-        dlg = d.addTaxonDlg(self)
+        dlg = addTax.addTaxonDlg(self)
         
         if not dlg.cancelled:
             try:
@@ -121,7 +127,7 @@ aberration_name,form_name,id FROM taxon_data"
                 tkMessageBox.showerror("Problem adding taxon","Got error: %s" % e)
                 
     def onUpdateRecEvent(self):
-        dlg = d.updateRecEventDlg(self,self.dbase)
+        dlg = updateRecEv.updateRecEventDlg(self,self.dbase)
         
         if not dlg.cancelled:
             try:
