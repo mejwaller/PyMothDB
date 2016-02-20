@@ -7,6 +7,7 @@ import dialogs.addReceventDlg as addRecEv
 import dialogs.addRecDataDlg as addRecData
 import dialogs.addTaxonDlg as addTax
 import dialogs.updateRecEventDlg as updateRecEv
+import dialogs.updateRecDataDlg as updateRecDat
 import dbcontroller as db
 from mysql.connector import Error
 import tkMessageBox
@@ -140,7 +141,12 @@ aberration_name,form_name,id FROM taxon_data"
                 tkMessageBox.showerror("Problem updating record event","Got error: %s" % e)
     
     def onUpdateRecData(self):
-        pass
+        dlg = updateRecDat.updateRecDataDlg(self,self.dbase)
+        
+        
+        
+        
+        
     
     def onUpdateTaxonData(self):
         pass
