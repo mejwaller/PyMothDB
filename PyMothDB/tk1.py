@@ -143,6 +143,15 @@ aberration_name,form_name,id FROM taxon_data"
     def onUpdateRecData(self):
         dlg = updateRecDat.updateRecDataDlg(self,self.dbase)
         
+        if not dlg.cancelled:
+            try:
+                self.dbase.runUpdateRecData(dlg.result)                
+            except Error as e:
+                tkMessageBox.showerror("Problem updating record data","Got error: %s" % e)
+                
+                
+            
+        
         
         
         
