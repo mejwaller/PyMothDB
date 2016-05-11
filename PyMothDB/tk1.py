@@ -41,6 +41,7 @@ class Application(tk.Frame):
         
         self.queryMenu = tk.Menu(self.menuBar)
         self.queryMenu.add_command(label="Run a query...",command=self.onAdHocQuery)
+        self.queryMenu.add_command(label = "Select by date range...", command = self.onSelectByDateRange)
                 
         self.menuBar.add_cascade(label="File", menu=self.fileMenu)                
         self.menuBar.add_cascade(label="Add records", menu=self.addRecMenu, state=tk.DISABLED)
@@ -89,6 +90,9 @@ aberration_name,form_name,id FROM taxon_data"
                 self.dbase.runQuery(dlg.result)
             except Error as e:
                 tkMessageBox.showerror("Query error","Got error: %s" % e)
+                
+    def onSelectByDateRange(self):
+        pass
             
     def onAddRecEvent(self):
         dlg = addRecEv.addRecEventDlg(self)
