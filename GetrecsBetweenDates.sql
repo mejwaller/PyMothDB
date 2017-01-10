@@ -11,6 +11,6 @@ BEGIN
  AND r.recevent_id = e.event_id 
  AND e.record_date > 'start' 
  AND e.record_date < 'end' 
- INTO outfile fileout fields terminated by ',' enclosed by '"' lines terminated by '\n';
+ INTO outfile 'fileout' fields terminated by ',' enclosed by '"' lines terminated by '\n';
 END //
 DELIMITER ; 
