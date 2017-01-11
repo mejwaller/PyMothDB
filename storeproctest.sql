@@ -7,7 +7,7 @@ BEGIN
 set @myvar = concat("select r.*, e.record_date, e.event_id 
 from record_data as r, record_event as e 
 where e.record_date = ","'",thedate,"'",
-and r.recevent_id = e.event_id
+" and r.recevent_id = e.event_id
 INTO outfile ","'",fileout,"'",
 " fields terminated by ',' enclosed by '\"' lines terminated by '\n'");
 PREPARE stmt1 FROM @myvar;
