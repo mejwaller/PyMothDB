@@ -3,7 +3,7 @@ CREATE PROCEDURE GetRecsBetweenDates(IN post DATE, IN pre DATE, IN fileout VARCH
 BEGIN
 set @myvar = concat("select t.vernacular_name, t.order_name, t.family_name, t.genus_name, t.species_name, t.subspecies_name, t.aberration_name, t.form_name, 
  e.record_date, e.record_type, e.grid_ref, 
- r.count, r.notes 
+ r.count, r.notes, e.notes 
  FROM taxon_data AS t, 
  record_event AS e, 
  record_data AS r 
